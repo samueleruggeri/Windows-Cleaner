@@ -12,14 +12,17 @@ cls
 echo ========================================
 echo Temporary Cleaning Program
 echo ========================================
-echo 1. Clean user's temporary folder
-echo 2. Clean Windows Prefetch folder
-echo 3. Clean Windows temporary folder
-echo 4. Flush DNS (Network with name "Ethernet")
-echo 5. Activate Ultimate Performance Power Plan
-echo 6. Empty Recycle Bin
-echo 7. Empty Download folder
-echo 8. Exit
+echo 1. Clean user's temporary folder (%temp%)
+echo 2. Clean Windows Prefetch folder (C:\Windows\Temp)
+echo 3. Clean Windows temporary folder (C:\Windows\Prefetch)
+echo 4. Empty Recycle Bin
+echo 5. Empty Download folder
+echo 6. Flush DNS Cache
+echo 7. Activate Ultimate Performance Power Plan
+echo 8. Restore Power Plan
+echo 9. Clear Microsoft Store Cache
+echo 10. Clear Windows Update Cache
+echo 11. Exit
 echo.
 
 set /p choice="Enter the number of the desired option: "
@@ -35,11 +38,14 @@ if not defined isNumber (
 if "%choice%"=="1" goto clean_user_temp
 if "%choice%"=="2" goto clean_prefetch
 if "%choice%"=="3" goto clean_windows_temp
-if "%choice%"=="4" goto flush_dns
-if "%choice%"=="5" goto activate_ultimate_performance
-if "%choice%"=="6" goto empty_recycle_bin
-if "%choice%"=="7" goto empty_download_folder
-if "%choice%"=="8" goto exit_program
+if "%choice%"=="4" goto empty_recycle_bin
+if "%choice%"=="5" goto empty_download_folder
+if "%choice%"=="6" goto flush_dns
+if "%choice%"=="7" goto activate_ultimate_performance
+if "%choice%"=="8" goto restore_power_plan
+if "%choice%"=="9" goto clear_microsoft_store_cache
+if "%choice%"=="10" goto clear_windows_update_cache
+if "%choice%"=="11" goto exit_program
 
 :: Add handling for invalid choices
 echo Enter a valid choice.
@@ -49,8 +55,11 @@ goto menu
 :clean_user_temp
 echo Cleaning user's temporary folder...
 cd /d C:\Users\%USERNAME%\AppData\Local\Temp
-for /D %%i in (*) do rd /s /q "%%i"
-del /q /f /s *
+echo Cleaning user's temporary folder... >> "%USERPROFILE%\Desktop\program_logs.txt"
+for /F "delims=" %%i in ('dir /B /S /A:-D *') do (
+    echo Deleted file: %%i >> "%USERPROFILE%\Desktop\program_logs.txt"
+    del /q /f "%%i"
+)
 echo Cleaning complete.
 timeout /t 3 >nul
 set choice=
@@ -59,7 +68,11 @@ goto menu
 :clean_prefetch
 echo Cleaning Windows Prefetch folder...
 cd /d C:\Windows\Prefetch
-del /q /f /s *
+echo Cleaning Windows Prefetch folder... >> "%USERPROFILE%\Desktop\program_logs.txt"
+for /F "delims=" %%i in ('dir /B /S /A:-D *') do (
+    echo Deleted file: %%i >> "%USERPROFILE%\Desktop\program_logs.txt"
+    del /q /f "%%i"
+)
 echo Cleaning complete.
 timeout /t 3 >nul
 set choice=
@@ -68,7 +81,11 @@ goto menu
 :clean_windows_temp
 echo Cleaning Windows temporary folder...
 cd /d C:\Windows\Temp
-del /q /f /s *
+echo Cleaning Windows temporary folder... >> "%USERPROFILE%\Desktop\program_logs.txt"
+for /F "delims=" %%i in ('dir /B /S /A:-D *') do (
+    echo Deleted file: %%i >> "%USERPROFILE%\Desktop\program_logs.txt"
+    del /q /f "%%i"
+)
 echo Cleaning complete.
 timeout /t 3 >nul
 set choice=
@@ -77,12 +94,7 @@ goto menu
 :flush_dns
 echo Flushing DNS...
 ipconfig /flushdns
-netsh interface ip delete arpcache
-netsh winsock reset
-echo Resetting IPv4 DNS to DHCP for all interfaces...
-for /f "tokens=2 delims=: " %%a in ('ipconfig ^| find "Ethernet"') do (
-    netsh interface ip set dns name="%%a" source=dhcp
-)
+echo Flushing DNS... >> "%USERPROFILE%\Desktop\program_logs.txt"
 echo Flushing complete.
 timeout /t 3 >nul
 set choice=
@@ -91,7 +103,41 @@ goto menu
 :activate_ultimate_performance
 echo Activating Ultimate Performance Power Plan...
 powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61
+echo Activating Ultimate Performance Power Plan... >> "%USERPROFILE%\Desktop\program_logs.txt"
 echo Activation complete.
+timeout /t 3 >nul
+set choice=
+goto menu
+
+:restore_power_plan
+echo Restoring Power Plan...
+powercfg -restoredefaultschemes
+echo Restoring Power Plan... >> "%USERPROFILE%\Desktop\program_logs.txt"
+echo Power Plan restored.
+timeout /t 3 >nul
+set choice=
+goto menu
+
+:clear_microsoft_store_cache
+echo Clearing Microsoft Store Cache...
+WSReset.exe
+echo Clearing Microsoft Store Cache... >> "%USERPROFILE%\Desktop\program_logs.txt"
+echo Cache cleared.
+timeout /t 3 >nul
+set choice=
+goto menu
+
+:clear_windows_update_cache
+echo Clearing Windows Update Cache...
+net stop wuauserv
+cd /d %Windir%\SoftwareDistribution
+echo Clearing Windows Update Cache... >> "%USERPROFILE%\Desktop\program_logs.txt"
+for /F "delims=" %%i in ('dir /B /S /A:-D *') do (
+    echo Deleted file: %%i >> "%USERPROFILE%\Desktop\program_logs.txt"
+    del /q /f "%%i"
+)
+echo Cache cleared.
+net start wuauserv 
 timeout /t 3 >nul
 set choice=
 goto menu
@@ -99,6 +145,7 @@ goto menu
 :empty_recycle_bin
 echo Emptying Recycle Bin...
 rd /s /q C:\$Recycle.Bin
+echo Emptying Recycle Bin... >> "%USERPROFILE%\Desktop\program_logs.txt"
 echo Emptying complete.
 timeout /t 3 >nul
 set choice=
@@ -107,7 +154,11 @@ goto menu
 :empty_download_folder
 echo Emptying Download folder...
 cd /d C:\Users\%USERNAME%\Downloads
-del /q /f /s *
+echo Emptying Download folder... >> "%USERPROFILE%\Desktop\program_logs.txt"
+for /F "delims=" %%i in ('dir /B /S /A:-D *') do (
+    echo Deleted file: %%i >> "%USERPROFILE%\Desktop\program_logs.txt"
+    del /q /f "%%i"
+)
 echo Emptying complete.
 timeout /t 3 >nul
 set choice=
