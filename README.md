@@ -14,6 +14,8 @@ This is a Windows batch script designed to perform various cleaning tasks on a W
 9. **Clear Microsoft Store Cache**: Clears the cache for the Microsoft Store.
 10. **Clear Windows Update Cache**: Stops the Windows Update service, clears the Windows Update cache, and restarts the service.
 
+![Windows Cleaner](https://github.com/username/repository/blob/main/windows_cleaner.png)
+
 ## Usage
 
 - Run the script with administrator privileges. If not run as administrator, it will attempt to elevate privileges.
