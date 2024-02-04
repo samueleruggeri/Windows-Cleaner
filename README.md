@@ -19,7 +19,7 @@ This is a Windows batch script designed to perform various cleaning tasks on a W
 - Run the script with administrator privileges. If not run as administrator, it will attempt to elevate privileges.
 - Select an option from the menu by entering the corresponding number.
 - Follow the on-screen prompts to complete the selected action.
-- After each action, there is a 5-second delay before returning to the main menu.
+- After each action, there is a 3-second delay before returning to the main menu.
 
 ## Notes
 
