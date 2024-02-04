@@ -1,4 +1,4 @@
-# Windows-Utility
+# Windows Cleaner
 This is a Windows batch script designed to perform various cleaning tasks on a Windows system. It provides a simple menu interface to choose from different cleaning options.
 
 ## Features
