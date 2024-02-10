@@ -22,7 +22,9 @@ echo 7. Restore Power Plan
 echo 8. Activate Ultimate Performance Power Plan
 echo 9. Clear Microsoft Store Cache
 echo 10. Clear Windows Update Cache
-echo 11. Exit
+echo 11. Clear Thumbnail Cache
+echo 12. Repair Windows System
+echo 13. Exit
 echo.
 
 set /p choice="Enter the number of the desired option: "
@@ -45,7 +47,9 @@ if "%choice%"=="7" goto restore_power_plan
 if "%choice%"=="8" goto activate_ultimate_performance
 if "%choice%"=="9" goto clear_microsoft_store_cache
 if "%choice%"=="10" goto clear_windows_update_cache
-if "%choice%"=="11" goto exit_program
+if "%choice%"=="11" goto clear_thumbnail_cache
+if "%choice%"=="12" goto repair_windows_system
+if "%choice%"=="13" goto exit_program
 
 :: Add handling for invalid choices
 echo Enter a valid choice.
@@ -160,6 +164,17 @@ timeout /t 3 >nul
 set choice=
 goto menu
 
+:clear_thumbnail_cache
+echo Clearing Thumbnail Cache...
+del /s /q "%LocalAppData%\Microsoft\Windows\Explorer\*.db"
+echo Clearing Thumbnail Cache... >> "%USERPROFILE%\Desktop\program_logs.log"
+echo %DATE% %TIME:~0,5% >> "%USERPROFILE%\Desktop\program_logs.log"
+echo Thumbnail Cache cleared.
+timeout /t 3 >nul
+set choice=
+goto menu
+
+
 :empty_download_folder
 echo Emptying Download folder...
 cd /d C:\Users\%USERNAME%\Downloads
@@ -173,6 +188,22 @@ echo Emptying complete.
 timeout /t 3 >nul
 set choice=
 goto menu
+
+:repair_windows_system
+echo Repairing Windows System...
+sfc /scannow
+echo Repairing Windows System... >> "%USERPROFILE%\Desktop\program_logs.log"
+echo %DATE% %TIME:~0,5% >> "%USERPROFILE%\Desktop\program_logs.log"
+echo SFC scan complete. >> "%USERPROFILE%\Desktop\program_logs.log"
+DISM /Online /Cleanup-Image /RestoreHealth
+echo DISM Repairing Windows System... >> "%USERPROFILE%\Desktop\program_logs.log"
+echo %DATE% %TIME:~0,5% >> "%USERPROFILE%\Desktop\program_logs.log"
+echo DISM Repair complete. >> "%USERPROFILE%\Desktop\program_logs.log"
+echo Repair complete.
+timeout /t 3 >nul
+set choice=
+goto menu
+
 
 :exit_program
 echo Thank you for using the program! Exiting the program.
