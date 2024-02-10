@@ -13,6 +13,8 @@ This is a Windows batch script designed to perform various cleaning tasks on a W
 8. **Restore Power Plan**: Restores the default power plan settings.
 9. **Clear Microsoft Store Cache**: Clears the cache for the Microsoft Store.
 10. **Clear Windows Update Cache**: Stops the Windows Update service, clears the Windows Update cache, and restarts the service.
+11. **Repair Windows System**: Runs System File Checker (SFC) and DISM to repair Windows system files.
+12. **Clear Thumbnail Cache**: Deletes all thumbnail cache files in the Explorer folder.
 
 ![Windows Cleaner](https://github.com/samueleruggeri/Windows-Cleaner/blob/main/windows_cleaner.png)
 
